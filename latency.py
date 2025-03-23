@@ -21,7 +21,7 @@ for i in key:
       header = 46 # UDP+IPv4+Ethernet=46 bytes 
       send_int = float(re.sub(r"[^\d.]", "", s))  # Elimina todo excepto números y puntos
       mess_len = float(re.sub(r"[^\d.]", "", m))  # Elimina unidades como 'B' o 's'
-      off.append((mess_len + header) / send_int)
+      off.append((mess_len + header)*8 / send_int)
       dely.append(float(re.sub(r"[^\d.]", "", d_mean))) 
       
     dely_tot.append(sum(dely) / len(dely))
