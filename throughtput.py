@@ -6,27 +6,24 @@ import matplotlib.pyplot as plt
 
 key=["data_0_5","data_1","data_5","data_10","data_50","data_100","data_150","data_200","data_250", "data_300", "data_500"]
 thr_tot=[]
-off_tot=[]
 
 for i in key:
     data = pd.read_csv(f"data/{i}.csv")
-    thr=[]
-    off=[]
-
-    for i in range(0,9):
-      filter:str=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{i}.ethg$o[0].channel"), "value"].iloc[0] 
-
-      s:str = data.loc[(data["type"] == "param") & (data["module"] == f"ConfiguratorA.host0.app[0]") & (data["name"] == "sendInterval"), "value"].iloc[0]
-      m:str = data.loc[(data["type"] == "param") & (data["module"] == f"ConfiguratorA.host0.app[0]") & (data["name"] == "messageLength"), "value"].iloc[0]
-      header = 46 # UDP+IPv4+Ethernet=46 bytes
+    thr:float=0.0
+    off:float=0.0
+    for j in range(0,9): 
+      # Obtenr Throughput de medio de cada elemento ConfiguratorA.host0.ethg$o[0].channel
+      thrmean:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.ethg$o[0].channel"), "value"].iloc[0] 
+      sent_total:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.eth[0].mac") & (data["name"] == "bits/sec sent"), "value"].iloc[0]
+      thr+=float(thrmean)/1000 # Convertir a Kbps
+      off+=(float(sent_total)*100) # Convertir a Kbps
       
-      send_int = float(re.sub(r"[^\d.]", "", s))  # Elimina todo excepto números y puntos
-      mess_len = float(re.sub(r"[^\d.]", "", m))  # Elimina unidades como 'B' o 's'
-      off.append((mess_len + header)*8 / send_int) 
-      thr.append(float(re.sub(r"[^\d.]", "", filter))/off[i])
+    # off_tot.append(off/9) # Promedio de offed traffic
+    thr_tot.append((thr)) # Promedio de throughput
+   
 
-    thr_tot.append(sum(thr)/len(thr))
-    
+
+
 # Graficar el throughput total
 plt.show()
 plt.plot(key, thr_tot, label="Throughput All", color="red")
@@ -38,4 +35,3 @@ plt.grid(True)
 plt.show()
 
 
-# %%

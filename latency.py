@@ -4,7 +4,7 @@ import re
 import matplotlib.pyplot as plt
 
 
-key=["data_0_5","data_1","data_5","data_10","data_50","data_100","data_150","data_200","data_250", "data_300", "data_500", "data_800"]
+key=["data_0_5","data_1","data_5","data_10","data_50","data_100","data_150","data_200","data_250", "data_300", "data_500"]
 dely_tot=[]
 off_tot=[]
 
@@ -13,8 +13,8 @@ for i in key:
     dely=[]
     off=[]
 
-    for i in range(0,9):
-      d_mean:str=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{i}.app[1]"), "value"].iloc[0] 
+    for j in range(0,9):
+      d_mean:str=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.app[1]"), "value"].iloc[0] 
       s:str = data.loc[(data["type"] == "param") & (data["module"] == f"ConfiguratorA.host0.app[0]") & (data["name"] == "sendInterval"), "value"].iloc[0]
       m:str = data.loc[(data["type"] == "param") & (data["module"] == f"ConfiguratorA.host0.app[0]") & (data["name"] == "messageLength"), "value"].iloc[0]
       
@@ -24,7 +24,7 @@ for i in key:
       off.append((mess_len + header)*8 / send_int)
       dely.append(float(re.sub(r"[^\d.]", "", d_mean))) 
       
-    dely_tot.append(sum(dely) / len(dely))
+    dely_tot.append(sum(dely)/len(dely))
     off_tot.append(sum(off))
 
 plt.show()
