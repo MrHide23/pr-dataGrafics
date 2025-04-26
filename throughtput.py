@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 
 key=["data_0_5","data_1","data_5","data_10","data_50","data_100","data_150","data_200","data_250", "data_300", "data_500", "data_800"]
 thr_tot=[]
-off_tot=[]
-off_recv_tot=[]
 for i in key:
     data = pd.read_csv(f"data/{i}.csv")
     thr:float=0.0

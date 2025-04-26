@@ -4,31 +4,44 @@ import re
 import matplotlib.pyplot as plt
 
 
-key=["data_0_5","data_1","data_5","data_10","data_50","data_100","data_150","data_200","data_250", "data_300", "data_500"]
-dely_tot=[]
-off_tot=[]
 
+import pandas as pd
+import re
+import matplotlib.pyplot as plt
+
+
+key=["data_0_5","data_1","data_5","data_10","data_50","data_100","data_150","data_200","data_250", "data_300", "data_500", "data_800"]
+thr_tot=[]
+off_tot=[]
+off_recv_tot=[]
 for i in key:
     data = pd.read_csv(f"data/{i}.csv")
-    dely=[]
-    off=[]
+    thr:float=0.0
+    off:float=0.0
+    off_recv:float=0.0
+    for j in range(0,10): 
+      # Obtenr Throughput de medio de cada elemento ConfiguratorA.host0.ethg$o[0].channel
+      thrmean:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.ethg$o[0].channel"), "value"].iloc[0] 
+      sent_total:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.eth[0].mac") & (data["name"] == "bits/sec sent"), "value"].iloc[0]
+      thr+=float(thrmean)# Convertir a Kbps
+      off+=(float(sent_total)/(1000*100)) # Convertir a Kbps
 
-    for j in range(0,9):
-      d_mean:str=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.app[1]"), "value"].iloc[0] 
-      s:str = data.loc[(data["type"] == "param") & (data["module"] == f"ConfiguratorA.host0.app[0]") & (data["name"] == "sendInterval"), "value"].iloc[0]
-      m:str = data.loc[(data["type"] == "param") & (data["module"] == f"ConfiguratorA.host0.app[0]") & (data["name"] == "messageLength"), "value"].iloc[0]
-      
-      header = 46 # UDP+IPv4+Ethernet=46 bytes 
-      send_int = float(re.sub(r"[^\d.]", "", s))  # Elimina todo excepto números y puntos
-      mess_len = float(re.sub(r"[^\d.]", "", m))  # Elimina unidades como 'B' o 's'
-      off.append((mess_len + header)*8 / send_int)
-      dely.append(float(re.sub(r"[^\d.]", "", d_mean))) 
-      
-    dely_tot.append(sum(dely)/len(dely))
-    off_tot.append(sum(off))
+    thr_tot.append((off/9)/(thr/9)) # Promedio de throughput
+   
+
+# Graficar el throughput total
+plt.plot(["0,5","1","5","10","50","100","150","200","250", "300", "500", "800"], thr_tot, label="Throughput All", color="red")
+plt.xlabel("Simulations - pps")
+plt.ylabel("Offed Trafic/Throughput - kbps")
+plt.title("Capacity")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
 
 plt.show()
-plt.plot(key,dely_tot, label="Latency  ", color="blue")
+plt.plot(["0,5","1","5","10","50","100","150","200","250", "300", "500", "800"],dely_tot, label="Latency  ", color="blue")
 plt.xlabel("Nº of pq/s")
 plt.ylabel("Latency (ms)")
 plt.title("Latency of the NET")
