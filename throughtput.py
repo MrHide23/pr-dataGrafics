@@ -18,7 +18,7 @@ for i in key:
       thr+=float(thrmean)# Convertir a Kbps
       off+=(float(sent_total)/(1000*100)) # Convertir a Kbps
 
-    thr_tot.append((off/9)/(thr/9)) # Promedio de throughput
+    thr_tot.append((off/10)/(thr/10)) # Promedio de throughput
    
 
 # Graficar el throughput total
