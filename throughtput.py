@@ -13,10 +13,11 @@ for i in key:
     off_recv:float=0.0
     for j in range(0,10): 
       # Obtenr Throughput de medio de cada elemento ConfiguratorA.host0.ethg$o[0].channel
-      thrmean:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.ethg$o[0].channel"), "value"].iloc[0] 
+      thrmean:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.ethg$o[0].channel"), "value"].iloc[0] #bps
       sent_total:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.eth[0].mac") & (data["name"] == "bits/sec sent"), "value"].iloc[0]
-      thr+=float(thrmean)# Convertir a Kbps
-      off+=(float(sent_total)/(1000*100)) # Convertir a Kbps
+      thr+=float(thrmean)*8/1000# Convertir a Kbps
+      #off+=float(sent_total)/(1000*100) # Convertir a Kbps
+      off+=float(sent_total)*8/1000 # Convertir a Kbps
 
     thr_tot.append((off/10)/(thr/10)) # Promedio de throughput
    
