@@ -23,27 +23,28 @@ for i in key:
       dely.append(d_mean) 
       delyhost[j]+=d_mean
     
-    dely_tot.append((sum(dely)/len(dely)))
     off_tot.append((sum(off)/len(off))) # Promedio de throughput 
+    dely_tot.append((sum(dely)/len(dely)))
 
 
 for k in range(0,10): delyhost[k]/=len(delyhost) # Promedio de cada host    
 
 plt.figure(1)
-# plt.plot(off_tot, dely_tot, label="Latency  ", color="blue")
-# plt.xlabel("Nº of pq/s")
-# plt.ylabel("Latency (ms)")
-# plt.title("Latency of the NET")
-# plt.legend()
-# plt.grid(True)
-# plt.show()
-
-# plt.figure(2)
-plt.plot(delyhost, label="Latency Mean", color="blue")
-plt.xlabel(f"Nº of Host")
+plt.plot(dely_tot, label="Latency  ", color="blue")
+plt.xlabel("Nº of pq/s")
 plt.ylabel("Latency (ms)")
-plt.title(f"Latencia Mean Hosts")
+for i in range(0,10): plt.text(i, dely_tot[i], f"Host {i}: {dely_tot[i]:.5f}", fontsize=8, ha='left', va='bottom')
+plt.title("Latency of the NET")
 plt.legend()
-for i in range(0,10): plt.text(i, delyhost[i], f"Host {i}: {delyhost[i]:.5f}", fontsize=8, ha='left', va='bottom')
 plt.grid(True)
 plt.show()
+
+# plt.figure(2)
+# plt.plot(delyhost, label="Latency Mean", color="blue")
+# plt.xlabel(f"Nº of Host")
+# plt.ylabel("Latency (ms)")
+# plt.title(f"Latencia Mean Hosts")
+# plt.legend()
+# for i in range(0,10): plt.text(i, delyhost[i], f"Host {i}: {delyhost[i]:.5f}", fontsize=8, ha='left', va='bottom')
+# plt.grid(True)
+# plt.show()
