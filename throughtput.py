@@ -1,31 +1,27 @@
-
 import pandas as pd
 import re
 import matplotlib.pyplot as plt
 
-
-key=["data_0_5","data_1","data_5","data_10","data_50","data_100","data_150","data_200","data_250", "data_300", "data_500", "data_800"]
+# "data_350", "data_500", "data_800", "data_1200","data_1500"
+key=["data_10","data_100","data_350", "data_500", "data_800", "data_1000","data_1300","data_1500"]
 thr_tot=[]
+off_tot=[]
 for i in key:
     data = pd.read_csv(f"data/{i}.csv")
     thr:float=0.0
     off:float=0.0
-    off_recv:float=0.0
     for j in range(0,10): 
       # Obtenr Throughput de medio de cada elemento ConfiguratorA.host0.ethg$o[0].channel
       thrmean:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.ethg$o[0].channel"), "value"].iloc[0] #bps
-      sent_total:float=data.loc[(data["type"] == "scalar") & (data["module"] == f"ConfiguratorA.host{j}.eth[0].mac") & (data["name"] == "bits/sec sent"), "value"].iloc[0]
-      thr+=float(thrmean)*8/1000# Convertir a Kbps
-      #off+=float(sent_total)/(1000*100) # Convertir a Kbps
-      off+=float(sent_total)*8/1000 # Convertir a Kbps
+      thr+=(float(thrmean)/1000)# Convertir a Kbps
 
-    thr_tot.append((off/10)/(thr/10)) # Promedio de throughput
+    thr_tot.append((thr/10)) # Promedio de throughput
+    
    
-
 # Graficar el throughput total
-plt.plot(["0,5","1","5","10","50","100","150","200","250", "300", "500", "800"], thr_tot, label="Throughput All", color="red")
-plt.xlabel("Simulations - pps")
-plt.ylabel("Offed Trafic/Throughput - kbps")
+plt.plot(["10","100", "350", "500", "800", "1000", "1300", "1500"],thr_tot, label="Throughput All", color="red")
+plt.xlabel("Offload - pps")
+plt.ylabel("Throughput - kbps")
 plt.title("Capacity")
 plt.legend()
 plt.grid(True)
