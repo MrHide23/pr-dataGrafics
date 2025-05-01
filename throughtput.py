@@ -2,8 +2,7 @@ import pandas as pd
 import re
 import matplotlib.pyplot as plt
 
-# "data_350", "data_500", "data_800", "data_1200","data_1500"
-key=["data_10","data_100","data_350", "data_500", "data_800", "data_1000","data_1300","data_1500"]
+key=["data_10","data_100","data_350", "data_500", "data_800", "data_1000","data_1200","data_1300","data_1500"]
 thr_tot=[]
 off_tot=[]
 for i in key:
@@ -19,7 +18,7 @@ for i in key:
     
    
 # Graficar el throughput total
-plt.plot(["10","100", "350", "500", "800", "1000", "1300", "1500"],thr_tot, label="Throughput All", color="red")
+plt.plot(["10","100", "350", "500", "800","1200", "1000", "1300", "1500"],thr_tot, label="Throughput All", color="red")
 plt.xlabel("Offload - pps")
 plt.ylabel("Throughput - kbps")
 plt.title("Capacity")
